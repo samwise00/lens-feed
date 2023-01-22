@@ -5,16 +5,16 @@ import SignInButton from "./SignInButton";
 export default function Header() {
   return (
     <>
-      <div>
-        <div>
+      <div className="flex flex-row justify-between">
+        <div className="flex flex-row gap-2">
           <Link href={"/"}>
             <p>Home</p>
           </Link>
+          <Link href={"/create"}>
+            <p>Create</p>
+          </Link>
         </div>
-
-        <div>
-          <SignInButton />
-        </div>
+        <SignInButton />
       </div>
       <div />
     </>

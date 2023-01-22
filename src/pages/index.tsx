@@ -5,6 +5,8 @@ import {
   useExplorePublicationsQuery,
 } from "../graphql/generated";
 
+import SignInButton from "../components/SignInButton";
+
 export default function Home() {
   const { isLoading, error, data } = useExplorePublicationsQuery(
     {
