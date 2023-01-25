@@ -95,3 +95,4 @@ node_modules/
 .next
 .env
 .fleek.json
+.vercel

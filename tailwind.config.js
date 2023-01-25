@@ -26,6 +26,7 @@ module.exports = {
         geo: ["Geo", "sans-serif"],
         eudoxus: ["Eudoxus", "sans-serif"],
         bakbak: ["Bakbak", "sans-serif"],
+        catamaran: ["Catamaran", "sans-serif"],
       },
     },
   },

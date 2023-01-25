@@ -8,10 +8,12 @@ export default function Header() {
       <div className="flex flex-row justify-between">
         <div className="flex flex-row gap-2">
           <Link href={"/"}>
-            <p>Home</p>
+            <p className="font-catamaran font-extrabold text-3xl text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-cyan-300">
+              NOODLE
+            </p>
           </Link>
           <Link href={"/create"}>
-            <p>Create</p>
+            <p>+</p>
           </Link>
         </div>
         <SignInButton />
