@@ -1,13 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { useAddress, useSDK } from "@thirdweb-dev/react";
-import {
-  LENS_CONTRACT_ABI,
-  LENS_CONTRACT_ADDRESS,
-  FOLLOW_NFT_ABI,
-  FOLLOW_NFT_CONTRACT_ADDRESS,
-  LENS_PROFILES_ABI,
-  LENS_PROFILES_CONTRACT,
-} from "../const/contracts";
+import { useSDK } from "@thirdweb-dev/react";
+import { FOLLOW_NFT_ABI } from "../const/contracts";
 import { useCreateUnfollowTypedDataMutation } from "../graphql/generated";
 import useLogin from "./auth/useLogin";
 import { signTypedDataWithOmmittedTypename, splitSignature } from "./helpers";
@@ -16,7 +9,6 @@ export function useUnfollow() {
   const { mutateAsync: requestTypedData } =
     useCreateUnfollowTypedDataMutation();
   const sdk = useSDK();
-  const address = useAddress();
   const { mutateAsync: loginUser } = useLogin();
 
   async function unfollow(userId: string) {
@@ -51,22 +43,11 @@ export function useUnfollow() {
 
     //  3. Send the typed data to the smart contract to perform the
     // write operation on the blockchain
-    const lensHubContract = await sdk.getContractFromAbi(
-      LENS_CONTRACT_ADDRESS,
-      LENS_CONTRACT_ABI
+
+    const followNftContract = await sdk.getContractFromAbi(
+      domain.verifyingContract,
+      FOLLOW_NFT_ABI
     );
-
-    const lensProfilesContract = await sdk.getContractFromAbi(
-      LENS_PROFILES_CONTRACT,
-      LENS_PROFILES_ABI
-    );
-
-    // const followNftContract = await sdk.getContractFromAbi(
-    //   FOLLOW_NFT_CONTRACT_ADDRESS,
-    //   FOLLOW_NFT_ABI
-    // );
-
-    console.log(value.tokenId);
 
     const sig = {
       v,
@@ -75,22 +56,7 @@ export function useUnfollow() {
       deadline: value.deadline,
     };
 
-    // const approveRes = await lensHubContract.call(
-    //   "approve",
-    //   LENS_CONTRACT_ADDRESS,
-    //   value.tokenId
-    // );
-
-    // Call the smart contract function called "burnWithSig"
-    // const result = await lensHubContract.call("burn", value.tokenId);
-
-    // const approve = await lensProfilesContract.call(
-    //   "approve",
-    //   LENS_PROFILES_CONTRACT,
-    //   value.tokenId
-    // );
-
-    const result = await lensProfilesContract.call(
+    const result = await followNftContract.call(
       "burnWithSig",
       value.tokenId,
       sig

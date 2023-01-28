@@ -4,6 +4,7 @@ import {
   useFollowingQuery,
   useProfileQuery,
   usePublicationsQuery,
+  PublicationTypes,
 } from "../../graphql/generated";
 import { MediaRenderer, Web3Button, useAddress } from "@thirdweb-dev/react";
 import FeedPost from "../../components/FeedPost";
@@ -17,6 +18,7 @@ import { useUnfollow } from "@/src/lib/useUnfollow";
 type Props = {};
 
 export default function ProfilePage({}: Props) {
+  const [activeSort, setActiveSort] = useState<string>("Feed");
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const router = useRouter();
   const address = useAddress();
@@ -25,6 +27,10 @@ export default function ProfilePage({}: Props) {
 
   const { mutateAsync: followUser } = useFollow();
   const { mutateAsync: unfollowUser } = useUnfollow();
+
+  const handleSort = (val: string) => () => {
+    setActiveSort(val);
+  };
 
   const {
     isLoading: loadingProfile,
@@ -78,6 +84,24 @@ export default function ProfilePage({}: Props) {
     {
       request: {
         profileId: profileData?.profile?.id,
+      },
+    },
+    { enabled: !!profileData?.profile?.id }
+  );
+
+  const {
+    isLoading: isLoadingCollectedPublications,
+    data: collectedPublicationsData,
+    error: collectedPublicationsError,
+  } = usePublicationsQuery(
+    {
+      request: {
+        collectedBy: profileData?.profile?.ownedBy,
+        publicationTypes: [
+          PublicationTypes.Post,
+          PublicationTypes.Comment,
+          PublicationTypes.Mirror,
+        ],
       },
     },
     { enabled: !!profileData?.profile?.id }
@@ -151,18 +175,58 @@ export default function ProfilePage({}: Props) {
           <></>
         )}
       </div>
-      <div className="flex flex-col justify-center md:items-center">
-        <div className="flex flex-col justify-center pt-12 gap-4 px-2">
-          {isLoadingPublications ? (
-            <div>Loading Publications...</div>
-          ) : (
-            // Iterate over the items in the publications array
-            publicationsData?.publications.items.map((publication) => (
-              <FeedPost publication={publication} key={publication.id} />
-            ))
-          )}
-        </div>
+      <div className="flex flex-row justify-center items-center mx-auto gap-6 pt-6">
+        <button
+          onClick={handleSort("Feed")}
+          className={
+            activeSort == "Feed"
+              ? "font-bold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-cyan-300"
+              : "text-slate-500"
+          }
+        >
+          Feed
+        </button>
+        <button
+          onClick={handleSort("Collected")}
+          className={
+            activeSort == "Collected"
+              ? "font-bold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-cyan-300"
+              : "text-slate-500"
+          }
+        >
+          Collected
+        </button>
       </div>
+      {activeSort == "Feed" && (
+        <div className="flex flex-col justify-center md:items-center">
+          <div className="flex flex-col justify-center pt-6 gap-4 px-2">
+            {isLoadingPublications ? (
+              <div>Loading Publications...</div>
+            ) : (
+              // Iterate over the items in the publications array
+              publicationsData?.publications.items.map((publication) => (
+                <FeedPost publication={publication} key={publication.id} />
+              ))
+            )}
+          </div>
+        </div>
+      )}
+      {activeSort == "Collected" && (
+        <div className="flex flex-col justify-center md:items-center">
+          <div className="flex flex-col justify-center pt-12 gap-4 px-2">
+            {isLoadingPublications ? (
+              <div>Loading Publications...</div>
+            ) : (
+              // Iterate over the items in the publications array
+              collectedPublicationsData?.publications.items.map(
+                (publication) => (
+                  <FeedPost publication={publication} key={publication.id} />
+                )
+              )
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

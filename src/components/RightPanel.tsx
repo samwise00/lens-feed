@@ -9,7 +9,7 @@ type Props = {
   publication: any;
 };
 
-export default function FeedPost({ publication }: Props) {
+export default function RightPanel({ publication }: Props) {
   const { mutateAsync: mirrorPublication, isLoading: mirrorTxInProgress } =
     useMirror();
   const { mutateAsync: collectPublication, isLoading: collectTxInProgress } =
@@ -17,13 +17,13 @@ export default function FeedPost({ publication }: Props) {
   const { mutateAsync: unfollowUser } = useUnfollow();
 
   return (
-    <div className="flex flex-col justify-center w-screen md:max-w-[450px] px-1 md:px-0">
+    <div className="flex flex-col justify-center w-screen md:max-w-[250px]">
       {publication.__typename == "Mirror" && (
         <div className="flex flex-row justify-start items-end gap-1 pb-1 pl-1">
           <MediaRenderer
             src={publication?.profile?.picture?.original?.url || "/logo.png"}
             alt={publication.profile.name || publication.profile.handle}
-            className="h-[20px] w-[20px] rounded-lg"
+            className="h-[20px] w-[20px] rounded-full"
           />
           <Link
             href={`/profile/${publication.profile.handle}`}
@@ -38,7 +38,7 @@ export default function FeedPost({ publication }: Props) {
           <MediaRenderer
             src={publication?.profile?.picture?.original?.url || "/logo.png"}
             alt={publication.profile.name || publication.profile.handle}
-            className="h-[20px] w-[20px] rounded-lg"
+            className="h-[20px] w-[20px] rounded-full"
           />
           <p className="text-slate-500 text-xs ">
             {publication?.profile?.name} commented
@@ -60,7 +60,7 @@ export default function FeedPost({ publication }: Props) {
               "/logo.png"
             }
             alt={publication.profile.name || publication.profile.handle}
-            className="h-[50px] w-[50px] rounded-lg"
+            className="h-[50px] w-[50px] rounded-full"
           />
           {/* Author profile name */}
           <div className="flex flex-col">

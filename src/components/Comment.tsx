@@ -17,13 +17,13 @@ export default function FeedPost({ publication }: Props) {
   const { mutateAsync: unfollowUser } = useUnfollow();
 
   return (
-    <div className="flex flex-col justify-center w-screen md:max-w-[450px] px-1 md:px-0">
+    <div className="flex flex-col justify-center max-w-[400px]">
       {publication.__typename == "Mirror" && (
         <div className="flex flex-row justify-start items-end gap-1 pb-1 pl-1">
           <MediaRenderer
             src={publication?.profile?.picture?.original?.url || "/logo.png"}
             alt={publication.profile.name || publication.profile.handle}
-            className="h-[20px] w-[20px] rounded-lg"
+            className="h-[20px] w-[20px] rounded-full"
           />
           <Link
             href={`/profile/${publication.profile.handle}`}
@@ -33,55 +33,26 @@ export default function FeedPost({ publication }: Props) {
           </Link>
         </div>
       )}
-      {publication.__typename == "Comment" && (
-        <div className="flex flex-row justify-start items-end gap-1 pb-1 pl-1">
-          <MediaRenderer
-            src={publication?.profile?.picture?.original?.url || "/logo.png"}
-            alt={publication.profile.name || publication.profile.handle}
-            className="h-[20px] w-[20px] rounded-lg"
-          />
-          <p className="text-slate-500 text-xs ">
-            {publication?.profile?.name} commented
-          </p>
-        </div>
-      )}
-      <div className="bg-white dark:bg-[#1e1e1e] rounded-t-2xl drop-shadow-lg p-4">
+
+      <div className="bg-white  rounded-t-2xl drop-shadow-lg p-4">
         <div className="flex flex-row gap-4">
           {/* Author Profile Picture */}
           <MediaRenderer
             // @ts-ignore - the type does exist
-            src={
-              (publication?.__typename == "Post" &&
-                publication?.profile?.picture?.original?.url) ||
-              (publication?.__typename == "Mirror" &&
-                publication?.mirrorOf?.profile?.picture?.original?.url) ||
-              (publication?.__typename == "Comment" &&
-                publication?.mainPost?.profile?.picture?.original?.url) ||
-              "/logo.png"
-            }
+            src={publication?.profile?.picture?.original?.url || "/logo.png"}
             alt={publication.profile.name || publication.profile.handle}
-            className="h-[50px] w-[50px] rounded-lg"
+            className="h-[50px] w-[50px] rounded-full"
           />
           {/* Author profile name */}
           <div className="flex flex-col">
             <Link
-              href={
-                publication?.__typename == "Post"
-                  ? `/profile/${publication.profile.handle}`
-                  : publication?.__typename == "Mirror"
-                  ? `/profile/${publication.mirrorOf.profile.handle}`
-                  : `/profile/${publication.mainPost.profile.handle}`
-              }
+              href={`/profile/${publication.profile.handle}`}
               className="font-bold text-xl"
             >
-              @{publication?.__typename == "Post" && publication.profile.name}
-              {publication.mirrorOf?.profile?.name}
-              {publication.mainPost?.profile?.name}
+              @{publication.profile.name}
             </Link>
             <p className="text-sm text-slate-400">
-              @{publication?.__typename == "Post" && publication.profile.handle}
-              {publication.mirrorOf?.profile?.handle}
-              {publication.mainPost?.profile?.handle}
+              @{publication.profile.handle}
             </p>
           </div>
         </div>
