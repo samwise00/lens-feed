@@ -4,6 +4,7 @@ import { ThirdwebProvider, ChainId } from "@thirdweb-dev/react";
 import Header from "../components/Header";
 
 import { ThemeProvider } from "next-themes";
+import { ChakraProvider } from "@chakra-ui/react";
 
 import "../../styles/globals.css";
 import styles from "@/styles/styles";
@@ -19,10 +20,12 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider enableSystem={true} attribute="class">
       <ThirdwebProvider desiredChainId={desiredChainId}>
-        <QueryClientProvider client={queryClient}>
-          <Header />
-          <Component {...pageProps} />
-        </QueryClientProvider>
+        <ChakraProvider>
+          <QueryClientProvider client={queryClient}>
+            <Header />
+            <Component {...pageProps} />
+          </QueryClientProvider>
+        </ChakraProvider>
       </ThirdwebProvider>
     </ThemeProvider>
   );

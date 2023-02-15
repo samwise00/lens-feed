@@ -123,110 +123,126 @@ export default function ProfilePage({}: Props) {
   }
 
   return (
-    <div>
-      <div className="flex flex-col justify-center items-center">
-        {/* Cover Image */}
-        {/* @ts-ignore */}
-        {profileData?.profile?.coverPicture?.original?.url && (
+    <div className="w-screen">
+      {/* @ts-ignore */}
+      {profileData?.profile?.coverPicture?.original?.url && (
+        <div className="w-screen">
           <MediaRenderer
-            // @ts-ignore
-            src={profileData?.profile?.coverPicture?.original?.url || ""}
+            src={
+              // @ts-ignore
+              profileData?.profile?.coverPicture?.original?.url ||
+              "/lens-cover.jpeg"
+            }
             alt={profileData?.profile?.name || profileData?.profile?.handle}
+            className="md:w-screen md:max-h[400px] object-none"
           />
-        )}
-        {/* Profile Picture */}
-        {/* @ts-ignore */}
-        {profileData?.profile?.picture?.original.url && (
-          <MediaRenderer
-            // @ts-ignore
-            src={profileData.profile.picture.original.url}
-            alt={profileData.profile.name || profileData.profile.handle || ""}
-            className="max-h-[100px] rounded-full"
-          />
-        )}
-        {/* Profile Name */}
-        <h1 className="text-4xl font-bold">
-          {profileData?.profile?.name || "Anon User"}
-        </h1>
-        {/* Profile Handle */}
-        <p>@{profileData?.profile?.handle}</p>
-        {/* Profile Description */}
-        <p>{profileData?.profile?.bio}</p>
-        <p>
-          {profileData?.profile?.stats.totalFollowers} {" Followers"}{" "}
-        </p>
-        {isFollowing != true && profileData?.profile?.ownedBy != address ? (
-          <Web3Button
-            contractAddress={LENS_CONTRACT_ADDRESS}
-            contractAbi={LENS_CONTRACT_ABI}
-            action={async () => await followUser(profileData?.profile?.id)}
-          >
-            Follow User
-          </Web3Button>
-        ) : isFollowing == true && profileData?.profile?.ownedBy != address ? (
-          <Web3Button
-            contractAddress={LENS_CONTRACT_ADDRESS}
-            contractAbi={LENS_CONTRACT_ABI}
-            action={async () => await unfollowUser(profileData?.profile?.id)}
-          >
-            Unfollow User
-          </Web3Button>
-        ) : (
-          <></>
-        )}
-      </div>
-      <div className="flex flex-row justify-center items-center mx-auto gap-6 pt-6">
-        <button
-          onClick={handleSort("Feed")}
-          className={
-            activeSort == "Feed"
-              ? "font-bold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-cyan-300"
-              : "text-slate-500"
-          }
-        >
-          Feed
-        </button>
-        <button
-          onClick={handleSort("Collected")}
-          className={
-            activeSort == "Collected"
-              ? "font-bold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-cyan-300"
-              : "text-slate-500"
-          }
-        >
-          Collected
-        </button>
-      </div>
-      {activeSort == "Feed" && (
-        <div className="flex flex-col justify-center md:items-center">
-          <div className="flex flex-col justify-center pt-6 gap-4 px-2">
-            {isLoadingPublications ? (
-              <div>Loading Publications...</div>
-            ) : (
-              // Iterate over the items in the publications array
-              publicationsData?.publications.items.map((publication) => (
-                <FeedPost publication={publication} key={publication.id} />
-              ))
-            )}
-          </div>
         </div>
       )}
-      {activeSort == "Collected" && (
-        <div className="flex flex-col justify-center md:items-center">
-          <div className="flex flex-col justify-center pt-12 gap-4 px-2">
-            {isLoadingPublications ? (
-              <div>Loading Publications...</div>
-            ) : (
-              // Iterate over the items in the publications array
-              collectedPublicationsData?.publications.items.map(
-                (publication) => (
-                  <FeedPost publication={publication} key={publication.id} />
-                )
-              )
-            )}
+      <div className="flex flex-col md:flex-row md:max-w-[1000px] gap-20 md:mx-auto justify-center items-center md:items-start">
+        <div className="flex flex-col -mt-20 justify-center items-center">
+          {/* Profile Picture */}
+          {/* @ts-ignore */}
+          {profileData?.profile?.picture?.original.url && (
+            <MediaRenderer
+              // @ts-ignore
+              src={profileData.profile.picture.original.url}
+              alt={profileData.profile.name || profileData.profile.handle || ""}
+              className="max-h-[200px] border-black border-2 rounded-xl"
+            />
+          )}
+          {/* Profile Name */}
+          <div className="flex flex-col justify-center items-center mx-auto py-4">
+            <h1 className="text-4xl font-bold">
+              {profileData?.profile?.name || "Anon User"}
+            </h1>
+            {/* Profile Handle */}
+            <p className="text-xs">@{profileData?.profile?.handle}</p>
           </div>
+          {/* Profile Description */}
+          <p className="md:max-w-[200px]">{profileData?.profile?.bio}</p>
+          <p>
+            {profileData?.profile?.stats.totalFollowers} {" Followers"}{" "}
+          </p>
+          {isFollowing != true && profileData?.profile?.ownedBy != address ? (
+            <Web3Button
+              contractAddress={LENS_CONTRACT_ADDRESS}
+              contractAbi={LENS_CONTRACT_ABI}
+              action={async () => await followUser(profileData?.profile?.id)}
+            >
+              Follow User
+            </Web3Button>
+          ) : isFollowing == true &&
+            profileData?.profile?.ownedBy != address ? (
+            <Web3Button
+              contractAddress={LENS_CONTRACT_ADDRESS}
+              contractAbi={LENS_CONTRACT_ABI}
+              action={async () => await unfollowUser(profileData?.profile?.id)}
+            >
+              Unfollow User
+            </Web3Button>
+          ) : (
+            <></>
+          )}
         </div>
-      )}
+
+        <div>
+          <div className="flex flex-row justify-center md:justify-start md:pl-4 items-center mx-auto gap-6 pt-6">
+            <button
+              onClick={handleSort("Feed")}
+              className={
+                activeSort == "Feed"
+                  ? "font-bold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-cyan-300"
+                  : "text-slate-500"
+              }
+            >
+              Feed
+            </button>
+            <button
+              onClick={handleSort("Collected")}
+              className={
+                activeSort == "Collected"
+                  ? "font-bold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-cyan-300"
+                  : "text-slate-500"
+              }
+            >
+              Collected
+            </button>
+          </div>
+          {activeSort == "Feed" && (
+            <div className="flex flex-col justify-center md:items-center">
+              <div className="flex flex-col justify-center pt-6 gap-4 px-2">
+                {isLoadingPublications ? (
+                  <div>Loading Publications...</div>
+                ) : (
+                  // Iterate over the items in the publications array
+                  publicationsData?.publications.items.map((publication) => (
+                    <FeedPost publication={publication} key={publication.id} />
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+          {activeSort == "Collected" && (
+            <div className="flex flex-col justify-center md:items-center">
+              <div className="flex flex-col justify-center pt-12 gap-4 px-2">
+                {isLoadingPublications ? (
+                  <div>Loading Publications...</div>
+                ) : (
+                  // Iterate over the items in the publications array
+                  collectedPublicationsData?.publications.items.map(
+                    (publication) => (
+                      <FeedPost
+                        publication={publication}
+                        key={publication.id}
+                      />
+                    )
+                  )
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

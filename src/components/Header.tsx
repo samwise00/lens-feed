@@ -16,8 +16,8 @@ export default function Header() {
   }, []);
 
   return (
-    <div className="flex flex-row justify-between pt-4">
-      <div className="flex flex-row gap-2">
+    <div className="flex flex-row justify-between items-center mx-auto py-2 px-2 md:w-[1000px]">
+      <div className="flex flex-row items-center gap-2">
         <Link href={"/"}>
           <p className="font-catamaran font-extrabold text-3xl text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-cyan-300">
             NOODLE
@@ -31,9 +31,6 @@ export default function Header() {
           />
         </div>
         <p>Search</p>
-        <Link href={"/create"}>
-          <p>+</p>
-        </Link>
       </div>
       <SignInButton />
     </div>

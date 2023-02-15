@@ -10,6 +10,9 @@
     "codegen": "graphql-codegen"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.4.9",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@next/font": "13.1.2",
     "@tanstack/react-query": "^4.22.0",
     "@thirdweb-dev/react": "^3.6.10",
@@ -20,6 +23,7 @@
     "@types/react-dom": "18.0.10",
     "autoprefixer": "^9.8.8",
     "ethers": "^5.7.2",
+    "framer-motion": "^8.5.4",
     "graphql": "^16.6.0",
     "next": "13.1.2",
     "next-themes": "^0.2.1",

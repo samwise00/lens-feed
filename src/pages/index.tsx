@@ -1,8 +1,9 @@
-import { useAddress } from "@thirdweb-dev/react";
+import { MediaRenderer, useAddress } from "@thirdweb-dev/react";
 import FeedPost from "../components/FeedPost";
 import ProfilePanel from "../components/ProfilePanel";
 import RightPanel from "../components/RightPanel";
 import FollowingPanel from "../components/FollowingPanel";
+import Footer from "../components/Footer";
 import {
   PublicationSortCriteria,
   useExplorePublicationsQuery,
@@ -10,17 +11,33 @@ import {
   useProfileQuery,
   usePublicationsQuery,
 } from "../graphql/generated";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useLensUser from "../lib/auth/useLensUser";
+import useCreatePost from "../lib/useCreatePost";
 
 export default function Home() {
   const [activeSort, setActiveSort] = useState<string>("Popular");
+  const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState();
+  const [content, setContent] = useState<string>("");
   const [followingPublications, setFollowingPublications] = useState<any>(null);
   const { profileQuery } = useLensUser();
   const address = useAddress();
+  const { mutateAsync: createPost } = useCreatePost();
 
   const handleSort = (val: string) => () => {
     setActiveSort(val);
+  };
+
+  // Create a reference to the hidden file input element
+  const hiddenFileInput = React.useRef(null);
+
+  // Programatically click the hidden file input element
+  // when the Button component is clicked
+  const handleClick = () => {
+    if (hiddenFileInput.current) {
+      hiddenFileInput.current.click();
+    }
   };
 
   const {
@@ -131,7 +148,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className="flex flex-row justify-center items-start md:max-w-[1000px] gap-4 pt-4">
+      <div className="flex flex-row justify-center items-start md:max-w-[1000px] gap-4 pt-4 mx-auto">
         <div className="flex flex-col items-end hidden md:block">
           <ProfilePanel
             profileData={profileData}
@@ -142,11 +159,86 @@ export default function Home() {
             key={dataLatest?.explorePublications.items[0].id}
           />
         </div>
-        <div className="flex flex-col justify-center items-center pt-4">
-          <div className="flex bg-black">
-            <h1 className="text-white dark:text-white p-2">
-              What's on your mind?
-            </h1>
+        <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-row justify-between items-end w-full mx-auto gap-4 rounded-xl bg-white dark:bg-[#1e1e1e] p-4 text-slate-500 text-xs">
+            <div className="flex flex-col w-full">
+              <div className="flex flex-row justify-between items-start w-full mx-auto gap-2">
+                <MediaRenderer
+                  src={
+                    // @ts-ignore - the type does exist
+                    profileData?.profile?.picture?.original?.url || "/logo.png"
+                  }
+                  alt={
+                    profileData?.profile?.name || profileData?.profile?.handle
+                  }
+                  className="h-[35px] w-[35px] rounded-lg"
+                />
+                <textarea
+                  className="shadow resize-none appearance-none dark:bg-[#101010] rounded-lg w-full px-3 h-8 pt-2 text-slate-500 focus:outline-none focus:shadow-outline"
+                  id="username"
+                  spellCheck="false"
+                  placeholder="What's on your mind?"
+                  onChange={(e) => setContent(e.target.value)}
+                />
+                {!image && (
+                  <button onClick={handleClick}>
+                    <img
+                      src="/upload-image.png"
+                      className="invert-[100%] h-7 opacity-60 object-contain"
+                    ></img>
+                  </button>
+                )}
+              </div>
+              {image && (
+                <div className="relative">
+                  <button>
+                    <div
+                      className="absolute font-extrabold text-lg pt-4 text-white right-0 pr-3"
+                      onClick={() => {
+                        setImage(null);
+                      }}
+                    >
+                      X
+                    </div>
+                  </button>
+                  <img
+                    className="pt-2 rounded-xl"
+                    src={URL.createObjectURL(image)}
+                  ></img>
+                </div>
+              )}
+              <div className="flex flex-row justify-end w-full pt-2 gap-2">
+                <div>
+                  <input
+                    type="file"
+                    ref={hiddenFileInput}
+                    style={{ display: "none" }}
+                    onChange={(e) => {
+                      if (e.target.files) {
+                        setImage(e.target.files[0]);
+                      }
+                    }}
+                  ></input>
+                </div>
+                {(content || image) && (
+                  <button
+                    onClick={async () => {
+                      if (image) {
+                        return await createPost({
+                          content,
+                          image,
+                        });
+                      }
+                      return await createPost({
+                        content,
+                      });
+                    }}
+                  >
+                    Post
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
           <div className="flex flex-row justify-center items-center mx-auto gap-6 pt-4">
             <button
@@ -201,7 +293,11 @@ export default function Home() {
         </div>
         <div className="flex flex-col items-end hidden md:block">
           <div className="flex flex-col justify-center gap-4">
-            <FollowingPanel
+            <RightPanel
+              profileData={profileData}
+              key={dataLatest?.explorePublications.items[0].id}
+            />
+            <Footer
               profileData={profileData}
               key={dataLatest?.explorePublications.items[0].id}
             />

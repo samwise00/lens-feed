@@ -32,22 +32,32 @@ export default function ProfilePanel({ profileData }: Props) {
           </p>
         </div>
       </div>
-      <div className="flex flex-row justify-between text-xs">
-        <div className="flex flex-row">
-          <p>Posts</p>
-          <p>13</p>
+      <div className="flex flex-col justify-between text-xs gap-2">
+        <div className="flex flex-row items-center gap-2">
+          <p className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-cyan-300">
+            {profileData?.profile?.stats?.totalPosts}
+          </p>
+          <p className="text-sm">Posts</p>
         </div>
-        <div className="flex flex-row">
-          <p>|</p>
+        <div className="flex flex-row items-center gap-2">
+          <p className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-cyan-300">
+            {profileData?.profile?.stats?.totalFollowers}
+          </p>
+          <p className="text-sm">Followers</p>
         </div>
-        <div className="flex flex-row">
-          <p>Followers</p>
-          <p>1456</p>
+        <div className="flex flex-row items-center gap-2">
+          <p className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-cyan-300">
+            $45.06
+          </p>
+          <p className="text-sm">Revenue</p>
         </div>
       </div>
-      <div className="flex justify-center items-center border-2 rounded-lg text-xs py-2">
+      <Link
+        href={`/profile/${profileData?.profile?.handle}`}
+        className="flex justify-center items-center border-2 rounded-lg text-xs py-2"
+      >
         View Profile
-      </div>
+      </Link>
       <div className="text-xs">Settings</div>
     </div>
   );

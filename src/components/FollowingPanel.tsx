@@ -3,12 +3,16 @@ import Link from "next/link";
 import { MediaRenderer, useAddress } from "@thirdweb-dev/react";
 
 import { useFollowingQuery } from "../graphql/generated";
+import { useDisclosure } from "@chakra-ui/react";
+
+import FollowingModal from "../components/FollowingModal";
 
 type Props = {
   profileData: any;
 };
 
 export default function FollowingPanel({ profileData }: Props) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const address = useAddress();
   const {
     isLoading: loadingfollowers,
@@ -32,7 +36,9 @@ export default function FollowingPanel({ profileData }: Props) {
     <div className="flex flex-col justify-center w-screen bg-white dark:bg-[#1e1e1e] rounded-2xl drop-shadow-lg p-4 md:max-w-[250px] gap-3">
       <div className="flex flex-row justify-between pb-4">
         <div className="text-sm">Following</div>
-        <div className="text-sm">See all</div>
+        <button className="text-sm" onClick={onOpen}>
+          See all
+        </button>
       </div>
       {followingData &&
         followingData?.following.items.map((follower: any) => {
@@ -48,7 +54,7 @@ export default function FollowingPanel({ profileData }: Props) {
               {/* Author profile name */}
               <div className="flex flex-col">
                 <Link
-                  href={`/profile/${follower?.wallet?.defaultProfile?.handle}`}
+                  href={`/profile/${follower?.profile?.handle}`}
                   className="font-bold text-sm"
                 >
                   {follower?.profile?.name}
@@ -60,6 +66,11 @@ export default function FollowingPanel({ profileData }: Props) {
             </div>
           );
         })}
+      <FollowingModal
+        isOpen={isOpen}
+        onClose={onClose}
+        profileData={profileData}
+      />
     </div>
   );
 }

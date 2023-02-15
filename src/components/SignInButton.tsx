@@ -64,7 +64,7 @@ export default function SignInButton({}: Props) {
           }
           // @ts-ignore
           alt={profileQuery.data.defaultProfile.name}
-          className="h-[30px] rounded-full"
+          className="h-[30px] rounded-lg"
         ></MediaRenderer>
       </div>
     );
