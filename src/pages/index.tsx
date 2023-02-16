@@ -36,6 +36,7 @@ export default function Home() {
   // when the Button component is clicked
   const handleClick = () => {
     if (hiddenFileInput.current) {
+      // @ts-ignore
       hiddenFileInput.current.click();
     }
   };
