@@ -80,7 +80,7 @@ export default function Home() {
   } = useExplorePublicationsQuery(
     {
       request: {
-        sortCriteria: PublicationSortCriteria.TopCollected,
+        sortCriteria: PublicationSortCriteria.CuratedProfiles,
       },
     },
     {
@@ -130,14 +130,23 @@ export default function Home() {
     { enabled: !!followingPublications }
   );
 
-  if (
-    errorLatest ||
-    errorPopular ||
-    followingError ||
-    followPublicationsError
-  ) {
-    return <div>Loading...</div>;
+  if (errorLatest) {
+    return <div>error loading latest publications...</div>;
   }
+
+  if (errorPopular) {
+    console.log(errorPopular);
+    return <div>error loading popular publications...</div>;
+  }
+
+  if (followingError) {
+    return <div>error loading following users...</div>;
+  }
+
+  if (followPublicationsError) {
+    return <div>Error loading followed publications...</div>;
+  }
+
   if (
     isLoadingLatest ||
     isLoadingPopular ||
@@ -250,7 +259,7 @@ export default function Home() {
                   : "text-slate-500"
               }
             >
-              Popular
+              For You
             </button>
             <button
               onClick={handleSort("Newest")}

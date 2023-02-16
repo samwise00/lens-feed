@@ -31,6 +31,9 @@ export const fetcher = <TData, TVariables>(
 
   return async () => {
     const token = typeof window !== "undefined" ? await getAccessToken() : null;
+    console.log("in auth-fetcher");
+    console.log(`token: ${token}`);
+    console.log(`query: ${query}`);
     const res = await fetch("https://api.lens.dev/", {
       method: "POST",
       headers: {
