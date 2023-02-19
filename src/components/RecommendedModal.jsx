@@ -27,7 +27,7 @@ export const RecommendedModal = ({
         <ModalOverlay />
         <ModalContent mx={10} bg="#1e1e1e" maxW={360} maxH={700} rounded="3xl">
           <ModalBody py={4}>
-            <div className="max-h-[680px] overflow-auto">
+            <div className="max-h-[680px] overflow-x-hidden">
               <div className="flex flex-col">
                 <div className="flex flex-row justify-center">
                   <h1 className="pb-4 text-lg font-bold">
@@ -38,7 +38,7 @@ export const RecommendedModal = ({
                   recommendedProfilesData?.recommendedProfiles?.map(
                     (profile, index) => {
                       return (
-                        <div className="flex flex-row justify-between py-2">
+                        <div className="flex flex-row justify-between py-2 px-4">
                           <div className="flex flex-row gap-4">
                             {/* Author Profile Picture */}
                             <MediaRenderer

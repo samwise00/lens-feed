@@ -44,7 +44,7 @@ export const FollowingModal = ({ isOpen, onClose, profileData }) => {
                 {followingData &&
                   followingData?.following.items.map((follower) => {
                     return (
-                      <div className="flex flex-row justify-between py-2">
+                      <div className="flex flex-row justify-between py-2 px-4">
                         <div className="flex flex-row gap-4">
                           {/* Author Profile Picture */}
                           <MediaRenderer

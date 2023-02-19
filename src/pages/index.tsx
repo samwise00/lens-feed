@@ -158,7 +158,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className="flex flex-row justify-center items-start md:max-w-[1000px] gap-4 pt-4 mx-auto">
+      <div className="flex flex-row justify-center items-start md:max-w-[1000px] gap-4 pt-4">
         <div className="flex flex-col items-end hidden md:block">
           <ProfilePanel
             profileData={profileData}
@@ -170,9 +170,9 @@ export default function Home() {
           />
         </div>
         <div className="flex flex-col justify-center items-center">
-          <div className="flex flex-row justify-between items-end w-full mx-auto gap-4 rounded-xl bg-white dark:bg-[#1e1e1e] p-4 text-slate-500 text-xs">
+          <div className="flex flex-row justify-between items-end w-full gap-4 md:rounded-xl bg-white dark:bg-[#1e1e1e] pb-2 pt-4 px-4 text-slate-500 text-xs">
             <div className="flex flex-col w-full">
-              <div className="flex flex-row justify-between items-start w-full mx-auto gap-2">
+              <div className="flex flex-row justify-between items-start w-full gap-2">
                 <MediaRenderer
                   src={
                     // @ts-ignore - the type does exist

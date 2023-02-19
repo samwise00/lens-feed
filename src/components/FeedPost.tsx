@@ -26,19 +26,24 @@ export default function FeedPost({ publication }: Props) {
     useCollect();
 
   return (
-    <div className="flex flex-col justify-center w-screen md:max-w-[450px] px-1 md:px-0">
+    <div className="flex flex-col justify-center w-screen md:max-w-[450px] md:px-0">
       {publication.__typename == "Mirror" && (
         <div className="flex flex-row justify-start items-end gap-1 pb-1 pl-1">
-          <MediaRenderer
-            src={publication?.profile?.picture?.original?.url || "/logo.png"}
-            alt={publication.profile.name || publication.profile.handle}
-            className="h-[20px] w-[20px] rounded-lg"
-          />
           <Link
             href={`/profile/${publication.profile.handle}`}
-            className="text-slate-500 text-xs "
+            className="flex flex-row text-slate-500 text-xs"
           >
-            mirrored by {publication?.profile?.name}
+            mirrored by&nbsp;{" "}
+            <span>
+              <MediaRenderer
+                src={
+                  publication?.profile?.picture?.original?.url || "/logo.png"
+                }
+                alt={publication.profile.name || publication.profile.handle}
+                className="h-[20px] w-[20px] rounded-lg"
+              />
+            </span>{" "}
+            <p>&nbsp;{publication?.profile?.name}</p>
           </Link>
         </div>
       )}
@@ -54,7 +59,7 @@ export default function FeedPost({ publication }: Props) {
           </p>
         </div>
       )}
-      <div className="bg-white dark:bg-[#1e1e1e] rounded-t-2xl p-4">
+      <div className="bg-white dark:bg-[#1e1e1e] md:rounded-t-2xl p-4">
         <div className="flex flex-row gap-2">
           {/* Author Profile Picture */}
           <MediaRenderer
@@ -99,17 +104,26 @@ export default function FeedPost({ publication }: Props) {
           {/* <h3>{publication.metadata.name}</h3> */}
           {/* Description of the Post */}
           <p className="text-sm text-slate-500 dark:text-slate-300 break-words pt-4">
-            {publication.metadata.content}
+            {publication?.__typename == "Post" &&
+              publication?.metadata?.content}
+            {publication?.__typename == "Comment" &&
+              publication?.mainPost?.metadata?.content}
+            {publication?.__typename == "Mirror" &&
+              publication?.mirrorOf?.metadata?.content}
           </p>
           {/* Image / media of the post if there is one */}
         </div>
       </div>
       {(publication.metadata.image ||
+        publication?.mainPost?.metadata?.image ||
+        publication?.mirrorOf?.metadata?.image ||
         publication.metadata.media?.length > 0) && (
         <div>
           <MediaRenderer
             src={
               publication.metadata.image ||
+              publication?.mainPost?.metadata?.image ||
+              publication?.mirrorOf?.metadata?.image ||
               publication.metadata.media[0].original.url
             }
             alt={publication.metadata.name || ""}
@@ -144,7 +158,7 @@ export default function FeedPost({ publication }: Props) {
             </p>
             <p> mirrors</p>
           </div>
-          <Link href={`/posts/${publication.id}`}>
+          <Link href={`/posts/${publication?.mainPost?.id}`}>
             <div className="flex flex-row gap-1 items-center">
               <p>
                 {(publication?.__typename == "Post" &&
@@ -160,11 +174,14 @@ export default function FeedPost({ publication }: Props) {
           </Link>
         </div>
       </div>
+      {/* {publication?.__typename == "Comment" && (
+        <p>{publication.metadata?.content}</p>
+      )} */}
 
       {/* Post Actions */}
       <div
         className={`flex flex-row justify-start gap-8 ${
-          !commentBoxOpen && "rounded-b-2xl"
+          !commentBoxOpen && "md:rounded-b-2xl"
         } bg-white dark:bg-[#1e1e1e]  px-4 py-2`}
       >
         <div className="flex flex-row gap-2 items-center">
@@ -223,9 +240,9 @@ export default function FeedPost({ publication }: Props) {
       </div>
       {/* Comment Box */}
       {commentBoxOpen && (
-        <div className="flex flex-row justify-between gap-4 bg-white dark:bg-[#1e1e1e] rounded-b-lg px-4 py-2 text-slate-500 text-xs pb-4">
+        <div className="flex flex-row justify-between gap-4 bg-white dark:bg-[#1e1e1e] md:rounded-b-lg px-4 py-2 text-slate-500 text-xs pb-4">
           <textarea
-            className="shadow appearance-none dark:bg-[#101010] rounded-lg w-full py-2 px-3 text-slate-500 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none dark:bg-[#101010] md:rounded-lg w-full py-2 px-3 text-slate-500 leading-tight focus:outline-none focus:shadow-outline"
             id="username"
             placeholder="Add a comment..."
             onChange={(e) => setContent(e.target.value)}
